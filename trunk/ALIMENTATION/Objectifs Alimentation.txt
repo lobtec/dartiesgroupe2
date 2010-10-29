@@ -1,0 +1,32 @@
+
+A partir du fichier Excel,
+Pour chaque feuille, extraire les variables et les faire concorder avec celles de la table
+Donner les types de traitement à faire pour que la variable puisse être insérée dans la table.
+Expliquer les traitements.
+Donner les champs de table concernés
+Donner les cas d'erreur possibles
+Expliquer les solutions à mettre en oeuvre.
+
+Je veux recevoir la première partie du travail (une feuille) : mercredi 3 novembre.
+Je vous renvoie un travail à corriger d'un membre du groupe.
+Je veux recevoir la correction vendredi 5 novembre.
+Lundi on en discute.
+
+Répartition du travail
+
+Charlotte :
+Initialisation --> Feuille Darties
+
+Loic :
+Vente Four et Hifi
+
+Nicolas :
+Ca Four et Hifi
+
+Louis :
+MB Four et Hifi
+
+Laura :
+Vente magneto, Ca Magneto, Mb Magneto
+
+Merci beaucoup et bon travail !!!
