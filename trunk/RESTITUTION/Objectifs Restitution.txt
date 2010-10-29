@@ -1,0 +1,26 @@
+Bonsoir à tous,
+ 
+Suite à la réunion de ce matin, nous avons fixé des objectifs pour les deux semaines à venir (étant donné les vacances).
+Soit, pour le mercredi 10 Novembre, il y a deux points principaux à voir :
+ 
+- Mettre au point un document de recensement de tous les tableaux et graphiques nécessaires à la restitution pour les 4 profils de l'application.
+Pour cela, nous avons partagé le travail en 4, voici la répartition :
+ 
+- Responsable Magasin (Chloé MANDON)
+- Responsable Régional (Anthony DUSSURGEY)
+- Direction Commerciale (Stéphanie GORGONE)
+- Chef de produit (Charaf EL BELLAI)
+ 
+Un document exemple a été démarré ce matin, notamment pour le responsable magasin. Je vous joins donc ce document, le but étant de le suivre et de détailler tous les onglets pour chaque profil. 
+ 
+Pour responsable magasin, il faut ajouter les tables nécessaires pour l'onglet Accueil et surement d'autres choses.
+Si vous avez des remarques supplémentaires sur des choses qui vous semblent importantes à préciser, ou si vous n'êtes pas d'accord avec la répartition, veuillez le signaler par mail.
+ 
+ 
+- Commencer à voir comment intégrer les tableaux et graphiques dans un projet Java (voire html). L'objectif sera alors de développer tous les écrans d'un profil (par exemple Responsable Magasin) dans une application et de tenter la réalisation de tableaux à la volée.
+ 
+Enfin, il est important de tenir au courant tout le groupe restitution des avancements.
+ 
+Si vous avez des questions, que ce soit sur l'organisation générale ou des questions plus précises sur le document à faire, n'hésitez pas.
+ 
+Il va de soit que nous conviendrons d'une réunion de mise au point entre nous le mercredi 10 Novembre entre 12h et 14h.
