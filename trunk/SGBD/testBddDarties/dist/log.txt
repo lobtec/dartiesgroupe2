@@ -1,5 +1,0 @@
-localhost
-1521
-orapeda1
-EPU3AGRP20
-EPU3AGRP20
