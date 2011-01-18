@@ -1,25 +1,26 @@
-
 PROC SQL ;
-CREATE TABLE Continent (
+
+Libname darties "C:\SAS\SAS_Darties_Gr2";
+CREATE TABLE darties.Continent (
 idContinent integer,
 nomContinent CHAR(80));
 
-create table Devise (
+create table darties.Devise (
 idDevise integer,
 nomDevise CHAR(80));
 
-create table Enseigne  (
+create table darties.Enseigne  (
    idEnseigne integer,
    nomEnseigne CHAR(80));
 
-create table Etape  (
+create table darties.Etape  (
    idEtape integer,
    libelleEtape CHAR(80),
    ordreEtape INTEGER);
  
 
 
-create table Etude  (
+create table darties.Etude  (
    idEtude            integer,
    idUtilisateur      integer,
    idStatut           integer,
@@ -34,7 +35,7 @@ create table Etude  (
 
 
 
-create table Faits  (
+create table darties.Faits  (
    moisFaits          INTEGER  ,
    anneeFaits         INTEGER  ,
    idMagasin          integer,
@@ -47,17 +48,17 @@ create table Faits  (
    ventesReelFaits    numeric
 );
 
-create table FamilleArticle  (
+create table darties.FamilleArticle  (
    idFamilleArticle   integer,
    nomFamilleArticle  char(80)
 );
 
-create table FamilleArticleEtude  (
+create table darties.FamilleArticleEtude  (
    idEtude            integer,
    idFamilleArticle   integer
 );
 
-create table HistoriqueDevise  (
+create table darties.HistoriqueDevise  (
    moisHistoriqueDevise INTEGER  ,
    anneeHistoriqueDevise INTEGER  ,
    idDevise           integer,
@@ -65,7 +66,7 @@ create table HistoriqueDevise  (
 );
 
 
-create table Magasin  (
+create table darties.Magasin  (
    idMagasin          integer,
    idVille            integer,
    idEnseigne         integer,
@@ -75,25 +76,25 @@ create table Magasin  (
    adresseMagasin     char(80)
 );
 
-create table Pays  (
+create table darties.Pays  (
    idPays             integer,
    idContinent        integer,
    idDevise           integer,
    nomPays            char(80)
 );
 
-create table Profil  (
+create table darties.Profil  (
    idProfil           integer,
    nomProfil          char(80)
 );
 
-create table RegionCommerciale  (
+create table darties.RegionCommerciale  (
    idRegionCommerciale integer,
    idPays             integer,
    nomRegionCommerciale char(80)
 );
 
-create table Resultat  (
+create table darties.Resultat  (
    idResultat         integer,
    idEtude            integer,
    requeteResultat    char(1024),
@@ -101,7 +102,7 @@ create table Resultat  (
    commentaireResultat char(1024)
 );
 
-create table Statistique  (
+create table darties.Statistique  (
    idStatistique      integer,
    idEtude            integer,
    accesStatistique   char(1024),
@@ -109,12 +110,12 @@ create table Statistique  (
    commentaireStatistique char(1024)
 );
 
-create table Statut  (
+create table darties.Statut  (
    idStatut           integer,
    nomStatut          char(80)
 );
 
-create table StatutEtape  (
+create table darties.StatutEtape  (
    idEtude            integer,
    idEtape            integer,
    idStatut           integer,
@@ -122,7 +123,7 @@ create table StatutEtape  (
    commentaireStatutEtape char(1024)
 );
 
-create table Utilisateur  (
+create table darties.Utilisateur  (
    idUtilisateur      integer,
    idProfil           integer,
    idRegionCommerciale integer,
@@ -137,7 +138,7 @@ create table Utilisateur  (
 );
 
 
- create table Ville  (
+ create table darties.Ville  (
    idVille            integer,
    idRegionCommerciale integer,
    nomVille           char(80),
