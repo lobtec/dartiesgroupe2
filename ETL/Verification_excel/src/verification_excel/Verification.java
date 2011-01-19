@@ -4,8 +4,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
@@ -96,18 +102,55 @@ public class Verification {
 
      public int Verification_materiels() {
 		 int colonne = 0;
+		 int nombre_villes_BDD = 0;
+		 int nombre_villes_a_ajouter = 0;
+		 int nombre_villes_a_supprimer = 0;
+
+		 // Connexion à la base de données et récupération du nombre de villes
+		 try {
+			// A FAIRE : Vérification que le nombre de lignes correspond bien à ce qu'il y a dans la BDD
+			Connexion connexion = new Connexion();
+			Connection cn = connexion.connection();
+			Statement stat = cn.createStatement();
+			String requete = "SELECT COUNT(idVille) As NbVilles FROM Ville";
+			ResultSet resultat = stat.executeQuery(requete);
+			while(resultat.next()) {
+				nombre_villes_BDD = Integer.parseInt(resultat.getString(1));
+			}
+		} catch (SQLException ex) {
+			return 13;
+		}
+
+		 Sheet feuille1 = classeur_excel.getSheetAt(0);
+		 for(Row ligne : feuille1) {
+			 if(ligne.getCell(1).getStringCellValue().compareTo("A") == 0) {
+				 nombre_villes_a_ajouter++;
+			 } else {
+				 if(ligne.getCell(1).getStringCellValue().compareTo("S") == 0) {
+					nombre_villes_a_supprimer++;
+				 }
+			 }
+		 }
+		 
+		 // Nombre total de villes + ligne de titre
+		 int nombre_total_lignes = 12*(nombre_villes_BDD+nombre_villes_a_ajouter-nombre_villes_a_supprimer) + 1;
+		 //System.out.println(nombre_total_lignes);
+
 
 		 // Parcours des trois feuilles concernant les objectifs
 		 for (int index_onglet = 1; index_onglet < 4; index_onglet++) {
 			 Sheet onglet_actuel = classeur_excel.getSheetAt(index_onglet); // Placement sur la feuille souhaitée
+
+			 // Vérification du nombre de lignes
+			 if(onglet_actuel.getLastRowNum() != nombre_total_lignes) {
+				 return 14;
+			 }
 
 			 String ville_actuelle = onglet_actuel.getRow(1).getCell(0).getStringCellValue();
 			 String ville_precedente = ville_actuelle;
 
 			 int mois = 1;
 
-			 // A FAIRE : Vérification que le nombre de lignes correspond bien à ce qu'il y a dans la BDD
-			 
 			 for(Row ligne : onglet_actuel) {
 				 if(ligne.getRowNum() ==  0) { // Si on est sur la première ligne, on vérifie les titres
 					 for(colonne = 0; colonne < materiel_titres.length; colonne++) {

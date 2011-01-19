@@ -6,16 +6,20 @@ public class Main {
         String dossier = "./";
 		String[] resultat = {	"0 - Pas de probleme",
 								"1 - Probleme a l ouverture du fichier (extension, chemin,...)",
-								"2 - Le fichier est corrompu", "3 - Probleme dans le nom des onglets",
+								"2 - Le fichier est corrompu",
+								"3 - Probleme dans le nom des onglets",
 								"4 - Erreur sur le nombre de colonnes de l onglet 1",
 								"5 - Erreur sur le titre d une colonne de l onglet 1",
 								"6 - Probleme sur la donnee Action de l onglet 1",
 								"7 - Probleme d acces au contenu d une cellule de l onglet 1",
-								"8 - Erreur sur le nombre de colonnes d un des onglets concernant le materiel",
-								"9 - Erreur sur le titre d une colonne d un des onglets concernant le materiel",
-								"10 - L annee n est pas correcte sur un des onglets concernant le materiel",
-								"11 - Probleme dans le nombre de mois d un des onglets concernant le materiel",
-								"12 - Probleme d acces a une cellule d un des onglets concernant le materiel"};
+								"8 - Erreur sur le nombre de colonnes d un des onglets concernant les objectifsl",
+								"9 - Erreur sur le titre d une colonne d un des onglets concernant les objectifs",
+								"10 - L annee n est pas correcte sur un des onglets concernant les objectifs",
+								"11 - Probleme dans le nombre de mois d un des onglets concernant les objectifs",
+								"12 - Probleme d acces a une cellule d un des onglets concernant les objectifs",
+								"13 - Probleme de connexion a la BDD",
+								"14 - Le nombre de ville est incorrect dans les onglets concernant les objectifs",
+								"15 - Erreur inconnue"};
         try {
 			Verification verif = new Verification(dossier);
 			//Ouverture du fichier :
@@ -31,13 +35,20 @@ public class Main {
 					System.out.println("Verif referentiel : " + resultat[verification_referentiel]);
 					if (verification_referentiel == 0) {
 						// Vérification des onglets concernant le matériel :
-						System.out.println("Verif materiel : " + resultat[verif.Verification_materiels()]);
+						int verification_materiels= verif.Verification_materiels();
+						System.out.println("Verif materiel : " + resultat[verification_materiels]);
+						System.exit(verification_materiels);
+					} else {
+						System.exit(verification_referentiel);
 					}
+				} else {
+					System.exit(verification_onglets);
 				}
+			} else {
+				System.exit(ouverture_fichier);
 			}
 		} catch(Exception e) {
-
+			System.exit(15);
 		}
     }
-
 }
