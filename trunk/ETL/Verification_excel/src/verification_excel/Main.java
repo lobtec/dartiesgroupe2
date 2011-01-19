@@ -1,9 +1,11 @@
 package verification_excel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Main {
 
     public static void main(String[] args) {
-        String dossier = "./";
 		String[] resultat = {	"0 - Pas de probleme",
 								"1 - Probleme a l ouverture du fichier (extension, chemin,...)",
 								"2 - Le fichier est corrompu",
@@ -20,11 +22,22 @@ public class Main {
 								"13 - Probleme de connexion a la BDD",
 								"14 - Le nombre de ville est incorrect dans les onglets concernant les objectifs",
 								"15 - Erreur inconnue"};
-        try {
-			Verification verif = new Verification(dossier);
+
+		Verification verif;
+		try {
+			String annee_actuelle;
+			String chemin = "./";
+
+			if(args[0].compareTo("A") == 0) { // Alimentation annuelle
+				verif = new Verification_Annuelle(chemin);
+			} else { // Alimentation mensuelle
+				verif = new Verification_Mensuelle(chemin);
+			}
+
 			//Ouverture du fichier :
 			int ouverture_fichier = verif.Ouverture_fichier();
 			System.out.println("Ouverture fichier : " + resultat[ouverture_fichier]);
+
 			if(ouverture_fichier == 0) {
 				// Vérification de l'existence des 4 onglets :
 				int verification_onglets = verif.Verification_onglets();
