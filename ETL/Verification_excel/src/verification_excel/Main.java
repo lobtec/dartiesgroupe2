@@ -38,15 +38,18 @@ public class Main {
 			int ouverture_fichier = verif.Ouverture_fichier();
 			System.out.println("Ouverture fichier : " + resultat[ouverture_fichier]);
 
-			if(ouverture_fichier == 0) {
+			if(ouverture_fichier == 0) { // Ouverture du fichier OK
+
 				// Vérification de l'existence des 4 onglets :
 				int verification_onglets = verif.Verification_onglets();
 				System.out.println("Verif onglets : " + resultat[verification_onglets]);
-				if(verification_onglets == 0) {
+				
+				if(verification_onglets == 0) { // Vérif des onglets OK
 					// Vérification de l'onglet référentiel :
 					int verification_referentiel = verif.Verification_referentiel();
 					System.out.println("Verif referentiel : " + resultat[verification_referentiel]);
-					if (verification_referentiel == 0) {
+					
+					if (verification_referentiel == 0) { // Vérif du référentiel OK
 						// Vérification des onglets concernant le matériel :
 						int verification_materiels= verif.Verification_materiels();
 						System.out.println("Verif materiel : " + resultat[verification_materiels]);
