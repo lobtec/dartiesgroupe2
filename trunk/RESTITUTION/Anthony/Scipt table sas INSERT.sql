@@ -2,7 +2,7 @@ PROC SQL ;
 
 Libname darties "C:\SAS\SAS_Darties_Gr2";
 
-insert into darties.darties.Enseigne  set idEnseigne=1, nomEnseigne ='Darty';
+insert into darties.Enseigne  set idEnseigne=1, nomEnseigne ='Darty';
 insert into darties.Enseigne  set idEnseigne=2, nomEnseigne ='Leroy merlin';
 insert into darties.Enseigne  set idEnseigne=3, nomEnseigne ='Boulanger';
 
