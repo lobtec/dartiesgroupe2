@@ -15,7 +15,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-public class Verification_Annuelle extends Verification {
+public class Verification_Mensuelle extends Verification {
 	private String[] resultat = {"0 - Pas de probleme",
 								"1 - Chemin ou nom de fichier incorrect",
 								"2 - Fichier corrompu, illisible",
@@ -29,11 +29,12 @@ public class Verification_Annuelle extends Verification {
 								"10 - Erreur sur le titre d’une colonne d’un des onglets concernant les objectifs",
 								"11 - L’année n’est pas correcte sur un des onglets concernant les objectifs",
 								"12 - Le mois n’est pas correct sur un des onglets concernant les objectifs",
-								"13 - Problème dans le nombre de mois sur un onglet concernant les objectifs",
+								"13 - Le nombre de lignes n’est pas celui attendu",
 								"14 - Problème d’accès au contenu d’une cellule",
 								"15 - Erreur inconnue"};
-	
+
     private int annee_actuelle;
+	private String mois_actuel;
 	private HSSFWorkbook classeur_excel;
     private String chemin;
 	private String[] onglets = {"Referentiel", "Fours", "Magnetoscopes", "Hifi"};
@@ -41,9 +42,9 @@ public class Verification_Annuelle extends Verification {
 											"Publicite", "Region", "Emplacement", "Adresse", "Horaires_Ouverture",
 											"Nb_Caisses", "Population", "Taux_Ouvrier", "Taux_Cadre", "Taux_Inactif",
 											"Moins_25ans", "Les_25_35ans", "Plus_35ans"};
-	private String[] materiel_titres = {"Ville", "Annee", "Mois", "O_Ventes", "O_CA", "O_MB"};
-	
-	Verification_Annuelle(String d) {
+	private String[] objectifs_titres = {"Ville", "Annee", "Mois", "R_Ventes", "R_CA", "R_MB"};
+
+	Verification_Mensuelle(String d) {
 		chemin = d;
     }
 
@@ -55,19 +56,23 @@ public class Verification_Annuelle extends Verification {
 	@Override
 	public int Ouverture_fichier() {
 		Date maDate = new Date();
-		SimpleDateFormat maDateLongue = new SimpleDateFormat("yyyy");
-		annee_actuelle = Integer.parseInt(maDateLongue.format(maDate).toString()); // Récupération de l'année
-		String nom_fichier = "Darties_" + annee_actuelle;
+		SimpleDateFormat formatAnnee = new SimpleDateFormat("yyyy");
+		SimpleDateFormat formatMois = new SimpleDateFormat("MM");
+		annee_actuelle = Integer.parseInt(formatAnnee.format(maDate).toString()); // Récupération de l'année
+		mois_actuel = formatMois.format(maDate).toString(); // Récupération du mois
+		String nom_fichier = "Darties_" + annee_actuelle + "_" + mois_actuel;
 		nom_fichier = nom_fichier + ".xls";
 		chemin = chemin + nom_fichier;
+
+		System.out.println("Chemin : " + chemin);
 		
-		InputStream fic;
+		InputStream fichier;
 		try {
 			// Ouverture fichier
-			fic = new FileInputStream(chemin);
+			fichier = new FileInputStream(chemin);
 			try {
 				// Initialisation du classeur
-				classeur_excel = new HSSFWorkbook(new POIFSFileSystem(fic));
+				classeur_excel = new HSSFWorkbook(new POIFSFileSystem(fichier));
 			}
 			catch (IOException ex) {
 				return 2; // Le fichier est corrumpu, ...
@@ -80,7 +85,7 @@ public class Verification_Annuelle extends Verification {
     }
 
 	@Override
-    public int Verification_onglets() {
+	public int Verification_onglets() {
 		for(int i = 0; i < onglets.length; i++) {
 			try {
 				Sheet feuille_actuelle = classeur_excel.getSheetAt(i); // Récupération de la feuille
@@ -90,30 +95,30 @@ public class Verification_Annuelle extends Verification {
 						return 4; // Le nom d'un onglet est incorrect
 					}
 				}
-			} catch(Exception e) {
-				return 3;
+			} catch (Exception e) {
+				return 3; // Le nombre d'onglets est incorrect
 			}
 		}
 		return 0;
-     }
-	
+	}
+
 	@Override
-    public int Verification_referentiel() {
-        Sheet feuille1 = classeur_excel.getSheetAt(0);
-		Row ligne1 = feuille1.getRow(0); // On se place sur la ligne1
+	public int Verification_referentiel() {
+        Sheet onglet1 = classeur_excel.getSheetAt(0); // On se place sur le premier onglet
+		Row ligne_titre = onglet1.getRow(0); // On se place sur la première ligne (de titre)
 		for(int colonne = 0; colonne < referentiel_titres.length; colonne++) {
 			try {
-				if(referentiel_titres[colonne].compareTo(ligne1.getCell(colonne).getStringCellValue()) != 0){
+				if(referentiel_titres[colonne].compareTo(ligne_titre.getCell(colonne).getStringCellValue()) != 0){
 					return 6; // Erreur sur le titre d'une colonne
 				}
 			} catch (Exception e) {
 				return 5; // Erreur sur le nombre de colonnes
 			}
 		}
-		
-        for(int i = 1; i < feuille1.getLastRowNum(); i++) {
+
+        for(int i = 1; i < onglet1.getLastRowNum(); i++) {
 			try {
-				Row row = feuille1.getRow(i);
+				Row row = onglet1.getRow(i);
 				String action = row.getCell(1).getStringCellValue();
 				if(action.compareTo("A") != 0 && action.compareTo("M") != 0 && action.compareTo("S") != 0) {
 					return 7; // Problème sur la donnée Action
@@ -123,15 +128,15 @@ public class Verification_Annuelle extends Verification {
 			}
         }
         return 0;
-     }
+	}
 
 	@Override
-    public int Verification_objectifs() {
+	public int Verification_objectifs() {
 		 int colonne = 0;
 		 int nombre_villes_BDD = 0;
 		 int nombre_villes_a_ajouter = 0;
 		 int nombre_villes_a_supprimer = 0;
-		 /*
+/*
 		 // Connexion à la base de données et récupération du nombre de villes
 		 try {
 			// A FAIRE : Vérification que le nombre de lignes correspond bien à ce qu'il y a dans la BDD
@@ -146,7 +151,7 @@ public class Verification_Annuelle extends Verification {
 		} catch (SQLException ex) {
 			return 8;
 		}
-		*/
+*/
 		 Sheet feuille1 = classeur_excel.getSheetAt(0);
 		 for(Row ligne : feuille1) {
 			 if(ligne.getCell(1).getStringCellValue().compareTo("A") == 0) {
@@ -157,30 +162,19 @@ public class Verification_Annuelle extends Verification {
 				 }
 			 }
 		 }
-		 
+
 		 // Nombre total de villes + ligne de titre
 		 int nombre_total_lignes = 12*(nombre_villes_BDD+nombre_villes_a_ajouter-nombre_villes_a_supprimer) + 1;
-		 
 
-		 // Parcours des trois feuilles concernant les objectifs
+		 // Parcours des trois onglets concernant les objectifs
 		 for (int index_onglet = 1; index_onglet < 4; index_onglet++) {
-			 Sheet onglet_actuel = classeur_excel.getSheetAt(index_onglet); // Placement sur la feuille souhaitée
-			 /*
-			 // Vérification du nombre de lignes
-			 if(onglet_actuel.getLastRowNum() != nombre_total_lignes) {
-				 return 13;
-			 }
-			 */
-			 String ville_actuelle = onglet_actuel.getRow(1).getCell(0).getStringCellValue();
-			 String ville_precedente = ville_actuelle;
-
-			 int mois = 1;
+			 Sheet onglet_actuel = classeur_excel.getSheetAt(index_onglet); // Placement sur l'onglet souhaité
 
 			 for(Row ligne : onglet_actuel) {
 				 if(ligne.getRowNum() ==  0) { // Si on est sur la première ligne, on vérifie les titres
-					 for(colonne = 0; colonne < materiel_titres.length; colonne++) {
+					 for(colonne = 0; colonne < objectifs_titres.length; colonne++) {
 						 try {
-							 if(materiel_titres[colonne].compareTo(ligne.getCell(colonne).getStringCellValue()) != 0){
+							 if(objectifs_titres[colonne].compareTo(ligne.getCell(colonne).getStringCellValue()) != 0){
 								return 10; // Erreur sur le titre d'une colonne
 							 }
 						 } catch (Exception e) {
@@ -189,22 +183,22 @@ public class Verification_Annuelle extends Verification {
 					 }
 				 } else { // On n'est pas sur la ligne de titre, on vérifie les données
 					 try {
+						 // Vérification de l'année
 						 if(ligne.getCell(1).getNumericCellValue() != annee_actuelle) {
 							 return 11; // L'année n'est pas correcte
 						 }
 
-						 ville_actuelle = ligne.getCell(0).getStringCellValue(); // Récupération de la ville courante
-						 if (ville_actuelle.compareTo(ville_precedente) != 0) { // Nouvelle ville
-							 //System.out.println("blop : " + mois);
-							 if(mois != 13) return 12; // La ville précédente n'avait pas 12 occurrences
-							 mois = 1; // Le compteur de mois repart à 1
-						 }
-						 if (ligne.getCell(2).getNumericCellValue() != mois) { // Le mois n'est pas celui attendu
-							 return 12; // Problème dans le nombre de mois
+						 // Vérification du mois
+						 if(ligne.getCell(2).getNumericCellValue() != Integer.parseInt(mois_actuel)) {
+							 return 12; // Le mois n'est pas correct
 						 }
 
-						 mois++;
-						 ville_precedente = ligne.getCell(0).getStringCellValue();
+						 /*
+						 // Vérification que le nombre de lignes est celui attendu
+						 if(onglet_actuel.getLastRowNum() == nombre_total_lignes) {
+							 return 13; // Le nombre de lignes n'est pas celui attendu
+						 }
+						*/
 					 } catch (Exception e) {
 						 return 14; // Problème d'accès à une cellule
 					 }
@@ -213,5 +207,5 @@ public class Verification_Annuelle extends Verification {
 			 }
 		 }
 		 return 0;
-     }
+	}
 }
