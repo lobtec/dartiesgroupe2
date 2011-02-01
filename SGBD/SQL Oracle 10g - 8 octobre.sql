@@ -456,8 +456,8 @@ create table Magasin  (
    idEnseigne         NUMBER(6)                       not null,
    emplacementMagasin VARCHAR2(80),
    nbCaisseMagasin    INTEGER,
-   horaireOuvertureMagasin CLOB,
-   adresseMagasin     CLOB,
+   horaireOuvertureMagasin VARCHAR2(50),
+   adresseMagasin     VARCHAR2(50),
    constraint PK_MAGASIN primary key (idMagasin)
 );
 
